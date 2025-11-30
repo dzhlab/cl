@@ -1,0 +1,160 @@
+{
+  "// Описание": "Примеры конфигураций MCP-серверов для Claude Code",
+  "// Путь": ".mcp.json в корне проекта или ~/.claude/mcp.json глобально",
+
+  "mcpServers": {
+    "// Puppeteer - автоматизация браузера": "",
+    "puppeteer": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-puppeteer"]
+    },
+
+    "// PostgreSQL - работа с БД": "",
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {
+        "DATABASE_URL": "${POSTGRES_URL}"
+      }
+    },
+
+    "// MongoDB": "",
+    "mongodb": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-mongodb"],
+      "env": {
+        "MONGODB_URI": "${MONGODB_URI}"
+      }
+    },
+
+    "// GitHub - работа с issues, PR, etc": "",
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+
+    "// Filesystem - расширенная работа с файлами": "",
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem"],
+      "args_extra": [
+        "--allowed-directories",
+        "${HOME}/projects,/tmp"
+      ]
+    },
+
+    "// Slack - отправка сообщений": "",
+    "slack": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-slack"],
+      "env": {
+        "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}",
+        "SLACK_TEAM_ID": "${SLACK_TEAM_ID}"
+      }
+    },
+
+    "// Google Drive": "",
+    "gdrive": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-gdrive"],
+      "env": {
+        "GOOGLE_CLIENT_ID": "${GOOGLE_CLIENT_ID}",
+        "GOOGLE_CLIENT_SECRET": "${GOOGLE_CLIENT_SECRET}"
+      }
+    },
+
+    "// Sentry - мониторинг ошибок": "",
+    "sentry": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sentry"],
+      "env": {
+        "SENTRY_DSN": "${SENTRY_DSN}",
+        "SENTRY_AUTH_TOKEN": "${SENTRY_AUTH_TOKEN}"
+      }
+    },
+
+    "// AWS - работа с AWS сервисами": "",
+    "aws": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-aws"],
+      "env": {
+        "AWS_ACCESS_KEY_ID": "${AWS_ACCESS_KEY_ID}",
+        "AWS_SECRET_ACCESS_KEY": "${AWS_SECRET_ACCESS_KEY}",
+        "AWS_REGION": "us-east-1"
+      }
+    },
+
+    "// Linear - таск-трекер": "",
+    "linear": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-linear"],
+      "env": {
+        "LINEAR_API_KEY": "${LINEAR_API_KEY}"
+      }
+    },
+
+    "// Jira": "",
+    "jira": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-jira"],
+      "env": {
+        "JIRA_URL": "${JIRA_URL}",
+        "JIRA_EMAIL": "${JIRA_EMAIL}",
+        "JIRA_API_TOKEN": "${JIRA_API_TOKEN}"
+      }
+    },
+
+    "// Notion": "",
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-notion"],
+      "env": {
+        "NOTION_API_KEY": "${NOTION_API_KEY}"
+      }
+    },
+
+    "// Custom MCP server (ваш собственный)": "",
+    "custom-server": {
+      "command": "node",
+      "args": ["./mcp-servers/custom/index.js"],
+      "env": {
+        "CUSTOM_API_KEY": "${CUSTOM_API_KEY}"
+      }
+    },
+
+    "// Python MCP server": "",
+    "python-server": {
+      "command": "python",
+      "args": ["-m", "my_mcp_server"],
+      "env": {
+        "PYTHONPATH": "${PWD}/mcp-servers"
+      }
+    },
+
+    "// Docker operations": "",
+    "docker": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-docker"]
+    },
+
+    "// Kubernetes": "",
+    "kubernetes": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-kubernetes"],
+      "env": {
+        "KUBECONFIG": "${HOME}/.kube/config"
+      }
+    }
+  },
+
+  "// Примечания": {
+    "note1": "Переменные окружения (${VAR}) берутся из .env файла",
+    "note2": "Не храните секреты в этом файле напрямую!",
+    "note3": "Создайте .env файл с реальными значениями",
+    "note4": "Некоторые серверы могут не существовать, это примеры",
+    "note5": "Проверяйте актуальный список на https://github.com/modelcontextprotocol/servers"
+  }
+}

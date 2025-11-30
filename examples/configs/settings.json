@@ -1,0 +1,150 @@
+{
+  "// Описание": "Пример конфигурации Claude Code для проекта",
+  "// Путь": ".claude/settings.json в корне проекта",
+
+  "permissions": {
+    "// Разрешенные инструменты": "Список разрешенных действий",
+    "allowedTools": [
+      "Read",
+      "Write(src/**)",
+      "Write(tests/**)",
+      "Write(docs/**)",
+      "Edit",
+      "Glob",
+      "Grep",
+      "Bash(npm *)",
+      "Bash(git *)",
+      "Bash(yarn *)",
+      "Bash(pnpm *)",
+      "Bash(pytest *)",
+      "Bash(go test *)"
+    ],
+
+    "// Запрещенные действия": "Что Claude не должен делать никогда",
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(sudo *)",
+      "Bash(rm -r *)",
+      "Write(.env*)",
+      "Write(secrets/*)",
+      "Write(*.key)",
+      "Write(*.pem)",
+      "Write(production.config.*)",
+      "Bash(npm publish)",
+      "Bash(git push --force main)",
+      "Bash(git push --force master)"
+    ]
+  },
+
+  "hooks": {
+    "// sessionStart": "Выполняется при старте сессии",
+    "sessionStart": [
+      "git fetch origin",
+      "echo '✅ Claude Code запущен'"
+    ],
+
+    "// preEditAccept": "Перед принятием изменений в файл",
+    "preEditAccept": [
+      "prettier --write $FILE",
+      "eslint $FILE --fix"
+    ],
+
+    "// postEditAccept": "После принятия изменений",
+    "postEditAccept": [
+      "npx tsc --noEmit $FILE"
+    ],
+
+    "// stop": "При остановке цикла",
+    "stop": [
+      "git status"
+    ]
+  },
+
+  "model": {
+    "// default": "Модель по умолчанию (sonnet | opus)",
+    "default": "sonnet",
+
+    "// autoSwitch": "Автоматически переключаться на Opus для сложных задач",
+    "autoSwitch": true
+  },
+
+  "context": {
+    "// maxTokens": "Максимальный размер контекста",
+    "maxTokens": 200000,
+
+    "// autoCompact": "Автоматически сжимать при достижении лимита",
+    "autoCompact": true,
+
+    "// compactThreshold": "Порог для автосжатия (% от maxTokens)",
+    "compactThreshold": 80
+  },
+
+  "git": {
+    "// autoCommit": "Автоматически коммитить после изменений",
+    "autoCommit": false,
+
+    "// commitMessageStyle": "Стиль commit messages (conventional | simple)",
+    "commitMessageStyle": "conventional",
+
+    "// signCommits": "Подписывать коммиты GPG",
+    "signCommits": false
+  },
+
+  "testing": {
+    "// autoRunTests": "Автоматически запускать тесты после изменений",
+    "autoRunTests": true,
+
+    "// testCommand": "Команда для запуска тестов",
+    "testCommand": "npm test",
+
+    "// failOnTestFailure": "Прекратить изменения если тесты падают",
+    "failOnTestFailure": true
+  },
+
+  "linting": {
+    "// autoFix": "Автоматически исправлять lint ошибки",
+    "autoFix": true,
+
+    "// lintCommand": "Команда для линтинга",
+    "lintCommand": "npm run lint",
+
+    "// failOnLintError": "Прекратить изменения при lint ошибках",
+    "failOnLintError": false
+  },
+
+  "notifications": {
+    "// slack": "Slack webhook для уведомлений",
+    "slack": {
+      "enabled": false,
+      "webhookUrl": "${SLACK_WEBHOOK_URL}",
+      "events": ["deploy", "error", "test_failure"]
+    },
+
+    "// email": "Email уведомления",
+    "email": {
+      "enabled": false,
+      "to": "team@example.com",
+      "events": ["deploy", "critical_error"]
+    }
+  },
+
+  "editor": {
+    "// tabSize": "Размер табуляции",
+    "tabSize": 2,
+
+    "// useTabs": "Использовать табы вместо пробелов",
+    "useTabs": false,
+
+    "// lineEnding": "Символы конца строки (lf | crlf | auto)",
+    "lineEnding": "lf",
+
+    "// trimTrailingWhitespace": "Удалять пробелы в конце строк",
+    "trimTrailingWhitespace": true
+  },
+
+  "// Переменные окружения": "Не храните секреты здесь! Используйте .env",
+  "env": {
+    "NODE_ENV": "development",
+    "LOG_LEVEL": "debug"
+  }
+}
