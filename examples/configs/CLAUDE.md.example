@@ -1,0 +1,389 @@
+# Название Проекта
+
+> Краткое описание проекта в 1-2 предложениях
+
+## О проекте
+
+Подробное описание что делает проект, для кого он предназначен, какую проблему решает.
+
+## Технологический стек
+
+### Frontend
+- **Framework:** React 18 + TypeScript
+- **State Management:** Redux Toolkit
+- **Styling:** Tailwind CSS + CSS Modules
+- **Build Tool:** Vite
+- **Testing:** Jest + React Testing Library
+
+### Backend
+- **Runtime:** Node.js 18
+- **Framework:** Express
+- **Language:** TypeScript
+- **Database:** PostgreSQL 15
+- **ORM:** Prisma
+- **Authentication:** JWT + Passport.js
+- **Testing:** Jest + Supertest
+
+### Infrastructure
+- **Hosting:** AWS (EC2, S3, RDS)
+- **CI/CD:** GitHub Actions
+- **Monitoring:** Sentry + Datadog
+- **Cache:** Redis
+
+## Структура проекта
+
+```
+project-root/
+├── src/
+│   ├── api/              # REST API endpoints
+│   ├── services/         # Бизнес-логика
+│   ├── models/           # Модели данных (Prisma)
+│   ├── middleware/       # Express middleware
+│   ├── utils/            # Утилиты и хелперы
+│   └── config/           # Конфигурационные файлы
+├── tests/
+│   ├── unit/             # Юнит-тесты
+│   ├── integration/      # Интеграционные тесты
+│   └── e2e/              # End-to-end тесты
+├── client/               # Frontend приложение
+│   ├── src/
+│   │   ├── components/   # React компоненты
+│   │   ├── pages/        # Страницы
+│   │   ├── hooks/        # Custom hooks
+│   │   ├── store/        # Redux store
+│   │   └── api/          # API клиент
+│   └── public/
+├── prisma/               # Схема и миграции БД
+├── scripts/              # Скрипты для автоматизации
+└── docs/                 # Документация
+```
+
+## Ключевые модули и их назначение
+
+### API (`/src/api`)
+- **auth.ts** - Аутентификация (регистрация, вход, выход)
+- **users.ts** - Управление пользователями
+- **posts.ts** - CRUD операции с постами
+- **comments.ts** - Комментарии к постам
+
+### Services (`/src/services`)
+- **AuthService** - Бизнес-логика аутентификации
+- **UserService** - Работа с пользователями
+- **EmailService** - Отправка email уведомлений
+- **CacheService** - Работа с Redis кешем
+
+### Models (`/src/models`)
+- **User** - Модель пользователя
+- **Post** - Модель поста
+- **Comment** - Модель комментария
+
+## Команды разработки
+
+```bash
+# Установка зависимостей
+npm install
+
+# Запуск dev-сервера (backend)
+npm run dev
+
+# Запуск dev-сервера (frontend)
+npm run client:dev
+
+# Запуск обоих одновременно
+npm run dev:all
+
+# Сборка для продакшена
+npm run build
+
+# Тестирование
+npm test                    # Все тесты
+npm run test:unit          # Только unit
+npm run test:integration   # Только integration
+npm run test:e2e          # Только E2E
+npm run test:watch        # Watch mode
+npm run test:coverage     # С покрытием
+
+# Линтинг и форматирование
+npm run lint              # ESLint проверка
+npm run lint:fix          # ESLint автоисправление
+npm run format            # Prettier форматирование
+npm run format:check      # Проверка форматирования
+
+# Проверка типов
+npm run type-check        # TypeScript проверка
+
+# База данных
+npm run db:migrate        # Применить миграции
+npm run db:seed           # Заполнить тестовыми данными
+npm run db:studio         # Открыть Prisma Studio
+npm run db:reset          # Сбросить БД (dev only!)
+
+# Docker
+npm run docker:up         # Запустить контейнеры
+npm run docker:down       # Остановить контейнеры
+npm run docker:logs       # Логи контейнеров
+```
+
+## Соглашения о коде
+
+### Общие правила
+1. **Язык кода:** Английский (переменные, функции, комментарии)
+2. **Стиль:** Следуем ESLint конфигурации (Airbnb style guide)
+3. **Форматирование:** Prettier с настройками из `.prettierrc`
+4. **Git:** Conventional Commits для commit messages
+
+### TypeScript
+- Используем **строгую типизацию** (`strict: true`)
+- Избегаем `any`, используем `unknown` или создаем типы
+- Все публичные функции должны иметь типы для параметров и возвращаемого значения
+- Используем интерфейсы для объектов, type для примитивов и unions
+
+```typescript
+// ✅ Хорошо
+interface User {
+  id: string;
+  email: string;
+  name: string;
+}
+
+function getUser(id: string): Promise<User | null> {
+  // ...
+}
+
+// ❌ Плохо
+function getUser(id): Promise<any> {
+  // ...
+}
+```
+
+### React
+- **Functional components** с hooks (не class components)
+- **Props:** Явная типизация через interface
+- **State:** Используем Redux Toolkit для глобального state
+- **Эффекты:** Используем useEffect, указываем зависимости
+- **Memo:** React.memo для тяжелых компонентов
+
+```typescript
+// ✅ Хорошо
+interface Props {
+  userId: string;
+  onUpdate: (user: User) => void;
+}
+
+const UserProfile: React.FC<Props> = ({ userId, onUpdate }) => {
+  // ...
+};
+```
+
+### Backend
+- **RESTful API:** Следуем REST принципам
+- **Middleware:** Порядок важен (auth → validation → business logic)
+- **Error Handling:** Централизованный error handler
+- **Validation:** Используем Zod для валидации входных данных
+- **Repository Pattern:** Вся работа с БД через repositories
+
+```typescript
+// Структура endpoint
+router.post('/api/users',
+  authMiddleware,           // 1. Аутентификация
+  validateRequest(schema),  // 2. Валидация
+  async (req, res, next) => {
+    try {
+      // 3. Бизнес-логика
+      const user = await userService.create(req.body);
+      res.json(user);
+    } catch (error) {
+      next(error);  // 4. Error handling
+    }
+  }
+);
+```
+
+### База данных
+- **Миграции:** Все изменения схемы через миграции (не руками!)
+- **Naming:** snake_case для таблиц и колонок
+- **Индексы:** На всех foreign keys и часто используемых полях
+- **N+1 проблема:** Используем `include` или `join` вместо циклов с запросами
+
+### Тестирование
+- **Покрытие:** Минимум 80% для всего кода
+- **Unit тесты:** Для всех чистых функций и сервисов
+- **Integration тесты:** Для API endpoints
+- **Моки:** Используем jest.mock для внешних зависимостей
+- **Naming:** `describe` группирует, `it/test` описывает поведение
+
+```typescript
+describe('UserService', () => {
+  describe('createUser', () => {
+    it('должен создать пользователя с валидными данными', async () => {
+      // Arrange, Act, Assert
+    });
+
+    it('должен выбросить ошибку если email уже существует', async () => {
+      // ...
+    });
+  });
+});
+```
+
+## Важные паттерны и решения
+
+### Аутентификация
+- Используем **JWT tokens** (access + refresh)
+- Access token: 15 минут
+- Refresh token: 7 дней, только httpOnly cookie
+- Все защищенные endpoints проверяют JWT через middleware
+
+### Обработка ошибок
+- Кастомные классы ошибок:
+  - `ValidationError` (400)
+  - `UnauthorizedError` (401)
+  - `ForbiddenError` (403)
+  - `NotFoundError` (404)
+  - `ConflictError` (409)
+- Централизованный error handler в `src/middleware/errorHandler.ts`
+
+### Кеширование
+- Redis для:
+  - Сессии пользователей
+  - Frequently accessed data
+  - Rate limiting
+- TTL по умолчанию: 5 минут
+- Cache invalidation при обновлении данных
+
+### Логирование
+- **Winston** для structured logging
+- Levels: error, warn, info, debug
+- В продакшене: только error и warn
+- Все ошибки отправляются в Sentry
+
+## Переменные окружения
+
+```bash
+# Database
+DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+
+# Redis
+REDIS_URL=redis://localhost:6379
+
+# JWT
+JWT_SECRET=your-secret-key-here
+JWT_EXPIRES_IN=15m
+REFRESH_TOKEN_SECRET=your-refresh-secret
+REFRESH_TOKEN_EXPIRES_IN=7d
+
+# Email (SendGrid)
+SENDGRID_API_KEY=your-api-key
+FROM_EMAIL=noreply@example.com
+
+# AWS
+AWS_ACCESS_KEY_ID=your-access-key
+AWS_SECRET_ACCESS_KEY=your-secret-key
+AWS_REGION=us-east-1
+AWS_S3_BUCKET=your-bucket-name
+
+# Sentry
+SENTRY_DSN=your-sentry-dsn
+
+# App
+NODE_ENV=development
+PORT=3000
+CLIENT_URL=http://localhost:5173
+```
+
+## Безопасность
+
+### Обязательно:
+- ✅ Все пароли хешируются (bcrypt, 10 rounds)
+- ✅ HTTPS в продакшене (Let's Encrypt)
+- ✅ Helmet.js для HTTP заголовков
+- ✅ Rate limiting (100 req/15min на IP)
+- ✅ CORS настроен (только разрешенные origins)
+- ✅ SQL injection защита (Prisma ORM)
+- ✅ XSS защита (санитизация входных данных)
+- ✅ Secrets в .env (НЕ в коде!)
+
+### Запрещено:
+- ❌ Хардкодить API ключи
+- ❌ Логировать пароли или токены
+- ❌ Коммитить .env файл
+- ❌ Использовать `eval()` или `Function()`
+- ❌ Прямой SQL (только через Prisma)
+
+## API Endpoints
+
+### Authentication
+```
+POST   /api/auth/register    - Регистрация
+POST   /api/auth/login       - Вход
+POST   /api/auth/logout      - Выход
+POST   /api/auth/refresh     - Обновление токена
+```
+
+### Users
+```
+GET    /api/users            - Список пользователей
+GET    /api/users/:id        - Один пользователь
+PUT    /api/users/:id        - Обновить пользователя
+DELETE /api/users/:id        - Удалить пользователя
+```
+
+### Posts
+```
+GET    /api/posts            - Список постов (с пагинацией)
+GET    /api/posts/:id        - Один пост
+POST   /api/posts            - Создать пост (auth required)
+PUT    /api/posts/:id        - Обновить пост (auth + ownership)
+DELETE /api/posts/:id        - Удалить пост (auth + ownership)
+```
+
+## Troubleshooting
+
+### Частые проблемы:
+
+**База данных не подключается**
+```bash
+# Проверь что PostgreSQL запущен
+docker ps
+
+# Проверь DATABASE_URL в .env
+echo $DATABASE_URL
+```
+
+**Тесты падают**
+```bash
+# Очисти cache
+npm run test:clear
+
+# Запусти с --verbose
+npm test -- --verbose
+```
+
+**TypeScript ошибки после pull**
+```bash
+# Переустанови зависимости
+rm -rf node_modules package-lock.json
+npm install
+```
+
+## Что НЕ изменять
+
+- `/src/legacy` - Старый код, удалим в v2.0
+- `/scripts/migration-2022` - Скрипты миграции, нужны для истории
+- `prisma/migrations/` - Никогда не редактируй старые миграции!
+
+## Дополнительная документация
+
+- [API Documentation](./docs/api.md) - Подробное описание API
+- [Database Schema](./docs/database.md) - Схема БД с пояснениями
+- [Deployment Guide](./docs/deployment.md) - Инструкции по деплою
+- [Contributing](./CONTRIBUTING.md) - Как контрибьютить
+
+## Контакты команды
+
+- **Tech Lead:** @johndoe
+- **Backend:** @backend-team
+- **Frontend:** @frontend-team
+- **DevOps:** @devops
+
+Slack: #project-name-dev
